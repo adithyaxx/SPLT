@@ -1,0 +1,98 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardUseCompatPadding="true"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+    <!--&lt;!&ndash; this view reveals when swipe right &ndash;&gt;
+    <RelativeLayout android:tag="reveal-right"
+        android:background="@color/accent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:tint="@color/icons"
+            android:src="@mipmap/ic_favorite_black_24dp"/>
+    </RelativeLayout>-->
+
+    <!-- this view reveals when swipe left -->
+    <RelativeLayout
+        android:tag="reveal-left"
+        android:background="@color/red500"
+        android:layout_alignTop="@id/linearlayout_participants_front"
+        android:layout_alignBottom="@id/linearlayout_participants_front"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:tint="#ffffff"
+            android:src="@drawable/ic_delete_white_24dp"/>
+    </RelativeLayout>
+
+    <!-- this is the item front view -->
+    <LinearLayout
+        android:tag="front"
+        android:id="@+id/linearlayout_participants_front"
+        android:background="#ffffff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <TextView
+            android:id="@+id/textview_bills_qty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:text="10"
+            android:textAlignment="textStart"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textview_bills_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="3"
+            android:singleLine="true"
+            android:text="Fried Chicken"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textview_bills_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:text="2.50"
+            android:textAlignment="textStart"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textview_bills_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:singleLine="true"
+            android:text="25.00"
+            android:textAlignment="textStart"
+            android:textColor="@color/primaryTextColor"
+            android:textSize="16sp" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

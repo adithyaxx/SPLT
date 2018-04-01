@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:backgroundTint="#EEEEEE"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" >
+        <EditText
+            android:id="@+id/edittext_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:padding="8dp"
+            android:singleLine="true" />
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quantity"
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold" />
+
+    <android.support.v7.widget.CardView
+        app:cardUseCompatPadding="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp" >
+        <EditText
+            android:id="@+id/edittext_qty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:inputType="number"
+            android:padding="8dp"
+            android:singleLine="true" />
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Price"
+        android:inputType="numberDecimal"
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:text="$"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <android.support.v7.widget.CardView
+            app:cardUseCompatPadding="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+            <EditText
+                android:id="@+id/edittext_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:inputType="numberDecimal"
+                android:padding="8dp"
+                android:singleLine="true" />
+        </android.support.v7.widget.CardView>
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Participants"
+        android:textAppearance="@android:style/TextAppearance.Material.Subhead"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginTop="15dp"
+        android:textStyle="bold" />
+
+    <com.llollox.androidprojects.compoundbuttongroup.CompoundButtonGroup
+        android:id="@+id/cmpbtngrp"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:entries="@array/array"
+        app:labelOrder="after"
+        app:numCols="2"
+        app:compoundType="check_box"/>
+</LinearLayout>

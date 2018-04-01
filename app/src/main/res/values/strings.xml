@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SPLT</string>
+
+    <string-array name="array">
+        <item>Service Charge</item>
+        <item>GST</item>
+    </string-array>
+</resources>
