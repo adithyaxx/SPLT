@@ -18,7 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="pw.adithya.SPLT.activities.CreateActivity"></activity>
+        <activity
+            android:name="pw.adithya.SPLT.activities.CreateActivity"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity android:name="pw.adithya.SPLT.activities.SummaryActivity"></activity>
     </application>
 
 </manifest>

@@ -66,8 +66,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_weight="3"
+            android:ellipsize="marquee"
             android:singleLine="true"
-            android:text="Fried Chicken"
+            android:text="Fried ChickenFried ChickenFried ChickenFried Chicken"
+            android:textAlignment="textStart"
             android:textColor="@color/primaryTextColor"
             android:textSize="16sp" />
 
@@ -79,7 +81,7 @@
             android:layout_weight="1"
             android:singleLine="true"
             android:text="2.50"
-            android:textAlignment="textStart"
+            android:textAlignment="textEnd"
             android:textColor="@color/primaryTextColor"
             android:textSize="16sp" />
 
@@ -91,7 +93,7 @@
             android:layout_weight="1"
             android:singleLine="true"
             android:text="25.00"
-            android:textAlignment="textStart"
+            android:textAlignment="textEnd"
             android:textColor="@color/primaryTextColor"
             android:textSize="16sp" />
     </LinearLayout>

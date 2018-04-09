@@ -7,4 +7,5 @@
     <color name="green500">#4CAF50</color>
     <color name="primaryTextColor">#D9000000</color>
     <color name="secondaryTextColor">#8C000000</color>
+    <color name="lightblue">#e9ebf1</color>
 </resources>

@@ -1,6 +1,7 @@
 package pw.adithya.SPLT.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -55,6 +56,8 @@ public class CreateActivity extends AppCompatActivity {
 
         Button createButton = findViewById(R.id.button_create);
 
+        final EditText titleEditText = findViewById(R.id.edittext_title);
+
         ImageView addParticipantsButton = findViewById(R.id.button_participants_add);
         ImageView addBillsButton = findViewById(R.id.button_bills_add);
         ImageView addContributionsButton = findViewById(R.id.button_contributions_add);
@@ -68,8 +71,8 @@ public class CreateActivity extends AppCompatActivity {
         context = this;
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("New Bill");
+        /*setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("New Bill");*/
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_participants);
         RecyclerView billsRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_bills);
@@ -80,8 +83,6 @@ public class CreateActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this);
         LinearLayoutManager layoutManager3 = new LinearLayoutManager(this);
         LinearLayoutManager layoutManager4 = new LinearLayoutManager(this);
-
-        CardView headersCardView = findViewById(R.id.cardview_headers);
 
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -255,11 +256,20 @@ public class CreateActivity extends AppCompatActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                double extras = 1 + ((extrasArrayList.get(0).percentage + extrasArrayList.get(1).percentage) / 100);
+                double extras = 1;
+
+                if (extrasArrayList.size() != 0)
+                    extras = 1 + ((extrasArrayList.get(0).percentage + extrasArrayList.get(1).percentage) / 100);
 
                 for (Participant p: participantsArrayList) {
                     Log.e(p.name, "" + (p.price * extras - p.contrib));
                 }
+
+                SummaryActivity.extras = extras;
+                SummaryActivity.participantsArrayList = participantsArrayList;
+                SummaryActivity.billName = titleEditText.getText().toString();
+
+                startActivity(new Intent(CreateActivity.this, SummaryActivity.class));
             }
         });
     }
