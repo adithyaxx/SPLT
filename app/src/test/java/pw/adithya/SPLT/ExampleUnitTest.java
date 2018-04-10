@@ -1,4 +1,4 @@
-package pw.adithya.splitandpay;
+package pw.adithya.SPLT;
 
 import org.junit.Test;
 

@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -35,7 +34,7 @@ import pw.adithya.SPLT.objects.Participant;
 import pw.adithya.SPLT.adapters.BillsAdapter;
 import pw.adithya.SPLT.adapters.ContributionsAdapter;
 import pw.adithya.SPLT.adapters.ParticipantsAdapter;
-import pw.adithya.splitandpay.R;
+import pw.adithya.SPLT.R;
 
 public class CreateActivity extends AppCompatActivity {
     ArrayList<Participant> participantsArrayList;
@@ -54,10 +53,9 @@ public class CreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
-        Button createButton = findViewById(R.id.button_create);
-
         final EditText titleEditText = findViewById(R.id.edittext_title);
 
+        ImageView createButton = findViewById(R.id.imageview_create);
         ImageView addParticipantsButton = findViewById(R.id.button_participants_add);
         ImageView addBillsButton = findViewById(R.id.button_bills_add);
         ImageView addContributionsButton = findViewById(R.id.button_contributions_add);

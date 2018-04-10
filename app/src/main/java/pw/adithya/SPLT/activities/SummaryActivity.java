@@ -7,15 +7,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.AbsListView;
-import android.widget.Toolbar;
 
 import java.util.ArrayList;
 
-import pw.adithya.SPLT.adapters.ExtrasAdapter;
 import pw.adithya.SPLT.adapters.SummaryAdapter;
 import pw.adithya.SPLT.objects.Participant;
-import pw.adithya.splitandpay.R;
+import pw.adithya.SPLT.R;
 
 public class SummaryActivity extends AppCompatActivity {
     public static double extras;
