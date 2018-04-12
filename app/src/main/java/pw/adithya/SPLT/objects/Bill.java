@@ -5,7 +5,6 @@ package pw.adithya.SPLT.objects;
  */
 
 public class Bill {
-    public int qty;
-    public double price, total;
+    public double qty, price, total;
     public String desc;
 }

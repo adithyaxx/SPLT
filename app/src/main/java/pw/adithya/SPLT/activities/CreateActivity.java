@@ -12,7 +12,6 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -21,9 +20,15 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.andreabaccega.widget.FormEditText;
 import com.llollox.androidprojects.compoundbuttongroup.CompoundButtonGroup;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import co.dift.ui.SwipeToAction;
@@ -36,7 +41,7 @@ import pw.adithya.SPLT.adapters.ContributionsAdapter;
 import pw.adithya.SPLT.adapters.ParticipantsAdapter;
 import pw.adithya.SPLT.R;
 
-public class CreateActivity extends AppCompatActivity {
+public class CreateActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     ArrayList<Participant> participantsArrayList;
     ArrayList<Bill> billsArrayList;
     ArrayList<Participant> contributionsArrayList;
@@ -47,13 +52,21 @@ public class CreateActivity extends AppCompatActivity {
     ExtrasAdapter extrasAdapter;
     ContributionsAdapter contributionsAdapter;
     Context context;
+    Calendar calendar;
+    TextView dateTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
+        calendar = Calendar.getInstance();
+
         final EditText titleEditText = findViewById(R.id.edittext_title);
+
+        final TextView participantsNum = findViewById(R.id.textview_participants_num);
+        final TextView totalNum = findViewById(R.id.textview_total_num);
+        final TextView extrasNum = findViewById(R.id.textview_extras_num);
 
         ImageView createButton = findViewById(R.id.imageview_create);
         ImageView addParticipantsButton = findViewById(R.id.button_participants_add);
@@ -67,13 +80,16 @@ public class CreateActivity extends AppCompatActivity {
         contributionsArrayList = new ArrayList<>();
         extrasArrayList = new ArrayList<>();
         context = this;
+        dateTextView = findViewById(R.id.textview_date);
 
-        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
-        /*setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("New Bill");*/
+        Date d = calendar.getTime();
+        SimpleDateFormat df = new SimpleDateFormat("dd MMMM yyyy");
+        String formattedDate = df.format(d);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_participants);
-        RecyclerView billsRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_bills);
+        dateTextView.setText(formattedDate);
+
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview_participants);
+        final RecyclerView billsRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_bills);
         final RecyclerView contributionsRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_contributions);
         RecyclerView extrasRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_extras);
 
@@ -103,6 +119,19 @@ public class CreateActivity extends AppCompatActivity {
         extrasAdapter = new ExtrasAdapter(extrasArrayList, this);
         extrasRecyclerView.setAdapter(extrasAdapter);
 
+        dateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        CreateActivity.this,
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.show(getFragmentManager(), "Datepickerdialog");
+            }
+        });
+
         SwipeToAction swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener<String>() {
             @Override
             public boolean swipeLeft(final String itemData) {
@@ -113,6 +142,7 @@ public class CreateActivity extends AppCompatActivity {
                         addParticipant(pos, itemData);
                     }
                 });
+
                 return true;
             }
 
@@ -141,7 +171,9 @@ public class CreateActivity extends AppCompatActivity {
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 participantsArrayList.add(new Participant(input.toString()));
+                                Log.e("Arraylist", participantsArrayList.size() + "");
                                 participantsAdapter.notifyDataSetChanged();
+                                participantsNum.setText("" + participantsArrayList.size());
                             }
                         })
                         .negativeText("Cancel")
@@ -161,23 +193,42 @@ public class CreateActivity extends AppCompatActivity {
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
                                 public void onClick(MaterialDialog dialog, DialogAction which) {
-                                    Bill bill = new Bill();
-                                    bill.desc = ((EditText) dialog.getCustomView().findViewById(R.id.edittext_desc)).getText().toString();
-                                    bill.qty = Integer.parseInt(((EditText) dialog.getCustomView().findViewById(R.id.edittext_qty)).getText().toString());
-                                    bill.price = Double.valueOf(((EditText) dialog.getCustomView().findViewById(R.id.edittext_price)).getText().toString());
-                                    bill.total = bill.qty * bill.price;
-                                    billsArrayList.add(bill);
-                                    billsAdapter.notifyDataSetChanged();
 
-                                    CompoundButtonGroup compoundButtonGroup = dialog.getCustomView().findViewById(R.id.cmpbtngrp);
-                                    List<Integer> intList = compoundButtonGroup.getCheckedPositions();
+                                    FormEditText descFET, qtyFET, priceFET;
+                                    descFET = dialog.getCustomView().findViewById(R.id.edittext_desc);
+                                    qtyFET = dialog.getCustomView().findViewById(R.id.edittext_qty);
+                                    priceFET = dialog.getCustomView().findViewById(R.id.edittext_price);
 
-                                    for (int i : intList) {
-                                        participantsArrayList.get(i).price += bill.total / intList.size();
+                                    boolean allValid = true;
+                                    FormEditText[] allFields = {descFET, qtyFET, priceFET};
+
+                                    for (FormEditText field: allFields) {
+                                        allValid = field.testValidity() && allValid;
+                                    }
+
+                                    if (allValid) {
+                                        Bill bill = new Bill();
+                                        bill.desc = descFET.getText().toString();
+                                        bill.qty = Double.valueOf(qtyFET.getText().toString());
+                                        bill.price = Double.valueOf(priceFET.getText().toString());
+                                        bill.total = bill.qty * bill.price;
+                                        billsArrayList.add(bill);
+                                        billsAdapter.notifyDataSetChanged();
+
+                                        totalNum.setText("$" + String.format("%.2f", calculateTotal()));
+                                        CompoundButtonGroup compoundButtonGroup = dialog.getCustomView().findViewById(R.id.cmpbtngrp);
+                                        List<Integer> intList = compoundButtonGroup.getCheckedPositions();
+
+                                        for (int i : intList) {
+                                            participantsArrayList.get(i).price += bill.total / intList.size();
+                                        }
+
+                                        dialog.dismiss();
                                     }
                                 }
                             })
                             .positiveText("Add")
+                            .autoDismiss(false)
                             .show();
 
                     CompoundButtonGroup compoundButtonGroup = materialDialog.getCustomView().findViewById(R.id.cmpbtngrp);
@@ -214,6 +265,7 @@ public class CreateActivity extends AppCompatActivity {
                                     }
 
                                     contributionsAdapter.notifyDataSetChanged();
+
                                 }
                             })
                             .positiveText("Add")
@@ -244,6 +296,7 @@ public class CreateActivity extends AppCompatActivity {
                                 extra.percentage = Double.parseDouble(percentageEditText.getText().toString());
                                 extrasArrayList.add(extra);
                                 extrasAdapter.notifyDataSetChanged();
+                                extrasNum.setText(String.format("%.1f", (calculateExtras() - 1) * 100) + "%");
                             }
                         })
                         .positiveText("Add")
@@ -254,18 +307,12 @@ public class CreateActivity extends AppCompatActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                double extras = 1;
-
-                if (extrasArrayList.size() != 0)
-                    extras = 1 + ((extrasArrayList.get(0).percentage + extrasArrayList.get(1).percentage) / 100);
-
-                for (Participant p: participantsArrayList) {
-                    Log.e(p.name, "" + (p.price * extras - p.contrib));
-                }
-
-                SummaryActivity.extras = extras;
                 SummaryActivity.participantsArrayList = participantsArrayList;
                 SummaryActivity.billName = titleEditText.getText().toString();
+                SummaryActivity.participants = String.valueOf(participantsArrayList.size());
+                SummaryActivity.extras = calculateExtras();
+                SummaryActivity.total = String.format("%.2f", calculateTotal());
+                SummaryActivity.bills = String.valueOf(billsArrayList.size());
 
                 startActivity(new Intent(CreateActivity.this, SummaryActivity.class));
             }
@@ -295,8 +342,9 @@ public class CreateActivity extends AppCompatActivity {
     }
 
     private int removeParticipant(String name) {
-        int pos = participantsArrayList.indexOf(new Participant(name));
-        participantsArrayList.remove(new Participant(name));
+        setStringList();
+        int pos = stringsList.indexOf(name);
+        participantsArrayList.remove(pos);
         participantsAdapter.notifyItemRemoved(pos);
         return pos;
     }
@@ -304,5 +352,51 @@ public class CreateActivity extends AppCompatActivity {
     private void addParticipant(int pos, String name) {
         participantsArrayList.add(pos, new Participant(name));
         participantsAdapter.notifyItemInserted(pos);
+    }
+
+    private double calculateTotal()
+    {
+        double total = 0;
+
+        for (Bill b : billsArrayList)
+        {
+            total += b.total;
+        }
+
+        total = total * calculateExtras();
+
+        return total;
+    }
+
+    private double calculateExtras()
+    {
+        double extras = 1;
+
+        if (extrasArrayList.size() != 0) {
+            for (Extra e : extrasArrayList) {
+                extras += e.percentage;
+            }
+
+            extras = extras / 100 + 1;
+        }
+
+        return extras;
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+        SimpleDateFormat df = new SimpleDateFormat("dd MMMM yyyy");
+        SimpleDateFormat df2 = new SimpleDateFormat("d M yyyy");
+        Date d = null;
+        try {
+            d = df2.parse(dayOfMonth + " " + monthOfYear + 1 + " " + year);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        dateTextView.setText(df.format(d));
+
+        Log.e("Date", dayOfMonth + "");
+        Log.e("Month", monthOfYear + "");
+        Log.e("Year", year + "");
     }
 }

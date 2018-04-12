@@ -38,10 +38,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="#00000000"
-                        android:gravity="center"
-                        android:text="Dinner @ FatBoys" />
+                        android:hint="Dinner @ FatBoys"
+                        android:textAlignment="textStart" />
 
                     <TextView
+                        android:id="@+id/textview_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -77,9 +78,10 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/textview_participants_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="8"
+                            android:text="0"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
                 </LinearLayout>
@@ -103,9 +105,10 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/textview_total_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="$23.20"
+                            android:text="$0.00"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
                 </LinearLayout>
@@ -129,9 +132,10 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/textview_extras_num"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="17%"
+                            android:text="0%"
                             android:textColor="@android:color/black" />
                     </LinearLayout>
                 </LinearLayout>
@@ -237,23 +241,23 @@
                         android:tint="@color/colorAccent" />
                 </RelativeLayout>
 
-                <android.support.v7.widget.CardView
+                <LinearLayout
+                    android:orientation="vertical"
                     android:visibility="gone"
                     android:id="@+id/cardview_headers"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:cardUseCompatPadding="true">
+                    android:layout_height="wrap_content" >
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#ffffff"
                         android:orientation="horizontal"
                         android:padding="10dp"
+                        android:weightSum="5"
                         android:tag="front">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:singleLine="true"
@@ -264,10 +268,10 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
-                            android:layout_weight="3"
+                            android:layout_weight="2"
                             android:singleLine="true"
                             android:text="DESCRIPTION"
                             android:textAlignment="textStart"
@@ -276,7 +280,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="1"
@@ -288,7 +292,7 @@
                             android:textStyle="bold" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="1"
@@ -299,7 +303,10 @@
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
-                </android.support.v7.widget.CardView>
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp" />
+                </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerview_bills"

@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -17,7 +18,7 @@ import pw.adithya.SPLT.R;
 public class SummaryActivity extends AppCompatActivity {
     public static double extras;
     public static ArrayList<Participant> participantsArrayList;
-    public static String billName;
+    public static String billName, participants, bills, total;
     SummaryAdapter summaryAdapter;
 
 
@@ -27,6 +28,18 @@ public class SummaryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_summary);
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar_summary);
+
+        TextView participantsTextView, billsTextView, totalTextView, extrasTextView;
+
+        participantsTextView = findViewById(R.id.textview_participants);
+        billsTextView = findViewById(R.id.textview_bills);
+        totalTextView = findViewById(R.id.textview_total);
+        extrasTextView = findViewById(R.id.textview_extras);
+
+        participantsTextView.setText(participants);
+        billsTextView.setText(bills);
+        totalTextView.setText(total);
+        extrasTextView.setText(String.valueOf(extras));
 
         RecyclerView recyclerView = findViewById(R.id.recyclerview_summary);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
