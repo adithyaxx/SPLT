@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
@@ -14,7 +13,7 @@
         android:singleLine="true"
         android:text="John Doe"
         android:textAlignment="textStart"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@android:color/white"
         android:textSize="14sp" />
 
     <TextView
@@ -25,7 +24,7 @@
         android:singleLine="true"
         android:text="owes"
         android:textAlignment="center"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@android:color/white"
         android:textSize="14sp" />
 
     <RelativeLayout
@@ -40,25 +39,25 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/textview_summary_total"
             android:layout_centerVertical="true"
             android:layout_marginRight="2dp"
-            android:layout_toLeftOf="@id/textview_summary_total"
             android:gravity="bottom"
             android:text="$"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@android:color/white"
             android:textSize="12sp" />
 
         <TextView
             android:id="@+id/textview_summary_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
             android:layout_weight="1"
+            android:layout_alignParentRight="true"
             android:includeFontPadding="false"
             android:singleLine="true"
             android:text="25.00"
             android:textAlignment="textStart"
-            android:textColor="@color/colorPrimary"
+            android:textColor="@android:color/white"
             android:textSize="14sp" />
     </RelativeLayout>
 </LinearLayout>

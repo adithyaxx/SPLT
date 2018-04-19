@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/SPLT.iml" filepath="$PROJECT_DIR$/.idea/SPLT.iml" />
-      <module fileurl="file://$PROJECT_DIR$/SplitAndPay.iml" filepath="$PROJECT_DIR$/SplitAndPay.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SPLT.iml" filepath="$PROJECT_DIR$/SPLT.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

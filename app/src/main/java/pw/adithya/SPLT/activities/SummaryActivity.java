@@ -3,10 +3,12 @@ package pw.adithya.SPLT.activities;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -36,6 +38,8 @@ public class SummaryActivity extends AppCompatActivity {
         totalTextView = findViewById(R.id.textview_total);
         extrasTextView = findViewById(R.id.textview_extras);
 
+        CardView doneButton = findViewById(R.id.cardview_done);
+
         participantsTextView.setText(participants);
         billsTextView.setText(bills);
         totalTextView.setText(total);
@@ -52,6 +56,16 @@ public class SummaryActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(billName);
+
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SummaryActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
 
     @Override

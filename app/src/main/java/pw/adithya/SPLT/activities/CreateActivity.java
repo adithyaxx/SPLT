@@ -2,6 +2,7 @@ package pw.adithya.SPLT.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -21,9 +22,12 @@ import android.widget.Toast;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.andreabaccega.widget.FormEditText;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.llollox.androidprojects.compoundbuttongroup.CompoundButtonGroup;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
+import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,8 +36,10 @@ import java.util.Date;
 import java.util.List;
 
 import co.dift.ui.SwipeToAction;
+import es.dmoral.toasty.Toasty;
 import pw.adithya.SPLT.adapters.ExtrasAdapter;
 import pw.adithya.SPLT.objects.Bill;
+import pw.adithya.SPLT.objects.Combined;
 import pw.adithya.SPLT.objects.Extra;
 import pw.adithya.SPLT.objects.Participant;
 import pw.adithya.SPLT.adapters.BillsAdapter;
@@ -48,18 +54,25 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
     ArrayList<Extra> extrasArrayList;
     ParticipantsAdapter participantsAdapter;
     ArrayList<String> stringsList;
+    ArrayList<Combined> combinedArrayList;
     BillsAdapter billsAdapter;
     ExtrasAdapter extrasAdapter;
     ContributionsAdapter contributionsAdapter;
     Context context;
     Calendar calendar;
     TextView dateTextView;
+    SharedPreferences.Editor editor;
+    SharedPreferences prefs;
+    Gson gson;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
 
+        editor = getSharedPreferences("app", MODE_PRIVATE).edit();
+        prefs = getSharedPreferences("app", MODE_PRIVATE);
+        gson = new Gson();
         calendar = Calendar.getInstance();
 
         final EditText titleEditText = findViewById(R.id.edittext_title);
@@ -79,6 +92,14 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
         billsArrayList = new ArrayList<>();
         contributionsArrayList = new ArrayList<>();
         extrasArrayList = new ArrayList<>();
+
+        Type combinedArrayListType = new TypeToken<ArrayList<Combined>>(){}.getType();
+
+        if (prefs.getString("combinedArrayList", "").equals(""))
+            combinedArrayList = new ArrayList<>();
+        else
+            combinedArrayList = gson.fromJson(prefs.getString("combinedArrayList", ""), combinedArrayListType);
+
         context = this;
         dateTextView = findViewById(R.id.textview_date);
 
@@ -307,14 +328,46 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SummaryActivity.participantsArrayList = participantsArrayList;
-                SummaryActivity.billName = titleEditText.getText().toString();
-                SummaryActivity.participants = String.valueOf(participantsArrayList.size());
-                SummaryActivity.extras = calculateExtras();
-                SummaryActivity.total = String.format("%.2f", calculateTotal());
-                SummaryActivity.bills = String.valueOf(billsArrayList.size());
+                if (titleEditText.getText().toString().equals(""))
+                    Toasty.error(context, "Please enter a valid title", Toast.LENGTH_SHORT, true).show();
+                else if (participantsArrayList.size() == 0)
+                    Toasty.error(context, "Please enter at least one participant", Toast.LENGTH_SHORT, true).show();
+                else if (billsArrayList.size() == 0)
+                    Toasty.error(context, "Please enter at least one bill", Toast.LENGTH_SHORT, true).show();
+                else {
+                    SummaryActivity.participantsArrayList = participantsArrayList;
+                    SummaryActivity.billName = titleEditText.getText().toString();
+                    SummaryActivity.participants = String.valueOf(participantsArrayList.size());
 
-                startActivity(new Intent(CreateActivity.this, SummaryActivity.class));
+                    double extras = 0.0;
+
+                    if (extrasArrayList.size() != 0) {
+                        for (Extra e : extrasArrayList) {
+                            extras += e.percentage;
+                        }
+                    }
+
+                    SummaryActivity.extras = extras;
+
+                    SummaryActivity.total = String.format("%.2f", calculateTotal());
+                    SummaryActivity.bills = String.valueOf(billsArrayList.size());
+
+                    Combined combined = new Combined();
+                    combined.billsArrayList = billsArrayList;
+                    combined.extrasArrayList = extrasArrayList;
+                    combined.participantsArraylist = participantsArrayList;
+                    combined.title = titleEditText.getText().toString();
+                    combined.date = dateTextView.getText().toString();
+                    combined.extras = extras;
+
+                    combinedArrayList.add(combined);
+
+                    editor.putString("combinedArrayList", gson.toJson(combinedArrayList));
+                    editor.apply();
+                    editor.commit();
+
+                    startActivity(new Intent(CreateActivity.this, SummaryActivity.class));
+                }
             }
         });
     }
@@ -388,15 +441,14 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
         SimpleDateFormat df = new SimpleDateFormat("dd MMMM yyyy");
         SimpleDateFormat df2 = new SimpleDateFormat("d M yyyy");
         Date d = null;
+
         try {
-            d = df2.parse(dayOfMonth + " " + monthOfYear + 1 + " " + year);
+            monthOfYear++;
+            d = df2.parse(dayOfMonth + " " + monthOfYear + " " + year);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        dateTextView.setText(df.format(d));
 
-        Log.e("Date", dayOfMonth + "");
-        Log.e("Month", monthOfYear + "");
-        Log.e("Year", year + "");
+        dateTextView.setText(df.format(d));
     }
 }
