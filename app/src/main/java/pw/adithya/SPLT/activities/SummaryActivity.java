@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import info.hoang8f.widget.FButton;
 import pw.adithya.SPLT.adapters.SummaryAdapter;
 import pw.adithya.SPLT.objects.Participant;
 import pw.adithya.SPLT.R;
@@ -38,7 +39,7 @@ public class SummaryActivity extends AppCompatActivity {
         totalTextView = findViewById(R.id.textview_total);
         extrasTextView = findViewById(R.id.textview_extras);
 
-        CardView doneButton = findViewById(R.id.cardview_done);
+        FButton doneButton = findViewById(R.id.cardview_done);
 
         participantsTextView.setText(participants);
         billsTextView.setText(bills);
@@ -71,7 +72,7 @@ public class SummaryActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_summary, menu);
         return true;
     }
 

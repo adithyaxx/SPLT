@@ -35,6 +35,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import at.markushi.ui.CircleButton;
 import co.dift.ui.SwipeToAction;
 import es.dmoral.toasty.Toasty;
 import pw.adithya.SPLT.adapters.ExtrasAdapter;
@@ -48,7 +49,7 @@ import pw.adithya.SPLT.adapters.ParticipantsAdapter;
 import pw.adithya.SPLT.R;
 
 public class CreateActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    ArrayList<Participant> participantsArrayList;
+    private ArrayList<Participant> participantsArrayList;
     ArrayList<Bill> billsArrayList;
     ArrayList<Participant> contributionsArrayList;
     ArrayList<Extra> extrasArrayList;
@@ -64,11 +65,16 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
     SharedPreferences.Editor editor;
     SharedPreferences prefs;
     Gson gson;
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create);
+
+        /*Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("New Bill");*/
 
         editor = getSharedPreferences("app", MODE_PRIVATE).edit();
         prefs = getSharedPreferences("app", MODE_PRIVATE);
@@ -81,7 +87,7 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
         final TextView totalNum = findViewById(R.id.textview_total_num);
         final TextView extrasNum = findViewById(R.id.textview_extras_num);
 
-        ImageView createButton = findViewById(R.id.imageview_create);
+        CircleButton createButton = findViewById(R.id.imageview_create);
         ImageView addParticipantsButton = findViewById(R.id.button_participants_add);
         ImageView addBillsButton = findViewById(R.id.button_bills_add);
         ImageView addContributionsButton = findViewById(R.id.button_contributions_add);
@@ -93,7 +99,7 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
         contributionsArrayList = new ArrayList<>();
         extrasArrayList = new ArrayList<>();
 
-        Type combinedArrayListType = new TypeToken<ArrayList<Combined>>(){}.getType();
+        final Type combinedArrayListType = new TypeToken<ArrayList<Combined>>(){}.getType();
 
         if (prefs.getString("combinedArrayList", "").equals(""))
             combinedArrayList = new ArrayList<>();
@@ -153,6 +159,30 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
             }
         });
 
+        intent = getIntent();
+
+        if (intent.hasExtra("from"))
+        {
+            int pos = intent.getIntExtra("pos", 0);
+            participantsArrayList.addAll(combinedArrayList.get(pos).participantsArrayList);
+            billsArrayList.addAll(combinedArrayList.get(pos).billsArrayList);
+            contributionsArrayList.addAll(combinedArrayList.get(pos).contributionsArrayList);
+            extrasArrayList.addAll(combinedArrayList.get(pos).extrasArrayList);
+
+            titleEditText.setText(combinedArrayList.get(pos).title);
+            dateTextView.setText(combinedArrayList.get(pos).date);
+            extrasNum.setText(combinedArrayList.get(pos).extras + "%");
+            totalNum.setText("$" + combinedArrayList.get(pos).total);
+            participantsNum.setText(participantsArrayList.size() + "");
+
+            participantsAdapter.notifyDataSetChanged();
+            billsAdapter.notifyDataSetChanged();
+            contributionsAdapter.notifyDataSetChanged();
+            extrasAdapter.notifyDataSetChanged();
+
+            Log.e("Bills Size", billsArrayList.size() + "");
+        }
+
         SwipeToAction swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener<String>() {
             @Override
             public boolean swipeLeft(final String itemData) {
@@ -192,7 +222,6 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
                             @Override
                             public void onInput(MaterialDialog dialog, CharSequence input) {
                                 participantsArrayList.add(new Participant(input.toString()));
-                                Log.e("Arraylist", participantsArrayList.size() + "");
                                 participantsAdapter.notifyDataSetChanged();
                                 participantsNum.setText("" + participantsArrayList.size());
                             }
@@ -242,6 +271,7 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
 
                                         for (int i : intList) {
                                             participantsArrayList.get(i).price += bill.total / intList.size();
+                                            Log.e("Price", participantsArrayList.get(i).price + "");
                                         }
 
                                         dialog.dismiss();
@@ -355,12 +385,17 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
                     Combined combined = new Combined();
                     combined.billsArrayList = billsArrayList;
                     combined.extrasArrayList = extrasArrayList;
-                    combined.participantsArraylist = participantsArrayList;
+                    combined.participantsArrayList = participantsArrayList;
+                    combined.contributionsArrayList = contributionsArrayList;
                     combined.title = titleEditText.getText().toString();
                     combined.date = dateTextView.getText().toString();
                     combined.extras = extras;
+                    combined.total = String.format("%.2f", calculateTotal());
 
-                    combinedArrayList.add(combined);
+                    if (intent.hasExtra("from"))
+                        combinedArrayList.set(intent.getIntExtra("pos", -1), combined);
+                    else
+                        combinedArrayList.add(combined);
 
                     editor.putString("combinedArrayList", gson.toJson(combinedArrayList));
                     editor.apply();
@@ -418,12 +453,14 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
 
         total = total * calculateExtras();
 
+        Log.e("Total", total + "");
+
         return total;
     }
 
     private double calculateExtras()
     {
-        double extras = 1;
+        double extras = 0;
 
         if (extrasArrayList.size() != 0) {
             for (Extra e : extrasArrayList) {
@@ -432,6 +469,8 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
 
             extras = extras / 100 + 1;
         }
+
+        Log.e("Extras", extras + "");
 
         return extras;
     }

@@ -5,6 +5,6 @@ package pw.adithya.SPLT.objects;
  */
 
 public class Extra {
-    public double percentage;
+    public double percentage = 0;
     public String desc;
 }

@@ -1,45 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    android:id="@+id/cardview_main"
+<com.andexert.library.RippleView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:rv_centered="true"
+    app:rv_color="@color/mdtp_white"
+    app:rv_rippleDuration="30"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardUseCompatPadding="true">
-    <LinearLayout
-        android:padding="10dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardview_main"
+        app:cardBackgroundColor="@color/midnight_blue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <LinearLayout
-            android:orientation="vertical"
+        app:cardUseCompatPadding="true">
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-
-            <TextView
-                android:id="@+id/textview_title"
-                android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Dinner @ FatBoys"
-                android:textAllCaps="true"
-                android:maxLines="2"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:orientation="vertical">
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" >
 
-            <TextView
-                android:id="@+id/textview_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10 January 2018"
-                android:textColor="@android:color/white"
-                android:textSize="12sp" />
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/textview_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dinner @ FatBoys"
+                        android:textAllCaps="true"
+                        android:maxLines="2"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
 
-        <android.support.v7.widget.RecyclerView
-            android:paddingTop="20dp"
-            android:id="@+id/recyclerview_main_child"
+                    <TextView
+                        android:id="@+id/textview_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="10 January 2018"
+                        android:textColor="@android:color/white"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:paddingTop="20dp"
+                    android:id="@+id/recyclerview_main_child"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </RelativeLayout>
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+            android:layout_height="match_parent"
+            android:id="@+id/view"/>
+    </android.support.v7.widget.CardView>
+</com.andexert.library.RippleView>

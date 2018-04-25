@@ -53,7 +53,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_alignParentRight="true"
-            android:includeFontPadding="false"
             android:singleLine="true"
             android:text="25.00"
             android:textAlignment="textStart"
