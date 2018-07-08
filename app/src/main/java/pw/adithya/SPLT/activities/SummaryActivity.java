@@ -30,6 +30,8 @@ public class SummaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_summary);
 
+        CardView cardView = findViewById(R.id.cardview_main);
+
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar_summary);
 
         TextView participantsTextView, billsTextView, totalTextView, extrasTextView;

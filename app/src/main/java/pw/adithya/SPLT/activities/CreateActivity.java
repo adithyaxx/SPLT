@@ -76,6 +76,8 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("New Bill");*/
 
+        //int sadi = Integer.parseInt("asdasd");
+
         editor = getSharedPreferences("app", MODE_PRIVATE).edit();
         prefs = getSharedPreferences("app", MODE_PRIVATE);
         gson = new Gson();
