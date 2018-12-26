@@ -446,14 +446,17 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
 
     private double calculateTotal()
     {
-        double total = 0;
+        double total = 0, extras = 0;
 
         for (Bill b : billsArrayList)
         {
             total += b.total;
         }
 
-        total = total * calculateExtras();
+        extras = calculateExtras();
+
+        if (extras > 0)
+            total *= extras;
 
         Log.e("Total", total + "");
 
