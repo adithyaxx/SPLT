@@ -8,6 +8,9 @@
 
 <img src="http://adithya.pw/images/splt.jpg" >
 
+### Join the Beta Testing
+* [Click Here](https://play.google.com/apps/testing/pw.adithya.SPLT)
+
 ### Features
 * Add bills shared by a few people
 * Add specific service charge & GST percentages
@@ -19,5 +22,5 @@
 * Share generated SPLTs as an image
 * Save added SPLTs on the cloud
 
-### Join the Beta Testing
-* [Click Here](https://play.google.com/apps/testing/pw.adithya.SPLT)
+### Bugs and Enhancements
+Feel free to open issues/PRs to report/fix bugs and contribute to the enhancement of the app
