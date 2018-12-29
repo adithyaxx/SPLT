@@ -219,10 +219,11 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
             public void onClick(View v) {
                 new MaterialDialog.Builder(context)
                         .title("Add a Participant")
-                        .inputType(InputType.TYPE_CLASS_TEXT)
-                        .input("Hint", "", new MaterialDialog.InputCallback() {
-                            @Override
-                            public void onInput(MaterialDialog dialog, CharSequence input) {
+                        .inputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME)
+                        .input("John Doe", "", (dialog, input) -> {
+                            if (input.equals(" ") || input.equals(""))
+                                Toasty.error(CreateActivity.this, "Please enter a valid name");
+                            else {
                                 participantsArrayList.add(new Participant(input.toString()));
                                 participantsAdapter.notifyDataSetChanged();
                                 participantsNum.setText("" + participantsArrayList.size());
@@ -234,127 +235,121 @@ public class CreateActivity extends AppCompatActivity implements DatePickerDialo
             }
         });
 
-        addBillsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setStringList();
+        addBillsButton.setOnClickListener(v -> {
+            setStringList();
 
-                if (stringsList.size() != 0) {
-                    MaterialDialog materialDialog = new MaterialDialog.Builder(context)
-                            .title("Add a Bill")
-                            .customView(R.layout.custom_bill_view, true)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(MaterialDialog dialog, DialogAction which) {
-
-                                    FormEditText descFET, qtyFET, priceFET;
-                                    descFET = dialog.getCustomView().findViewById(R.id.edittext_desc);
-                                    qtyFET = dialog.getCustomView().findViewById(R.id.edittext_qty);
-                                    priceFET = dialog.getCustomView().findViewById(R.id.edittext_price);
-
-                                    boolean allValid = true;
-                                    FormEditText[] allFields = {descFET, qtyFET, priceFET};
-
-                                    for (FormEditText field: allFields) {
-                                        allValid = field.testValidity() && allValid;
-                                    }
-
-                                    if (allValid) {
-                                        Bill bill = new Bill();
-                                        bill.desc = descFET.getText().toString();
-                                        bill.qty = Double.valueOf(qtyFET.getText().toString());
-                                        bill.price = Double.valueOf(priceFET.getText().toString());
-                                        bill.total = bill.qty * bill.price;
-                                        billsArrayList.add(bill);
-                                        billsAdapter.notifyDataSetChanged();
-
-                                        totalNum.setText("$" + String.format("%.2f", calculateTotal()));
-                                        CompoundButtonGroup compoundButtonGroup = dialog.getCustomView().findViewById(R.id.cmpbtngrp);
-                                        List<Integer> intList = compoundButtonGroup.getCheckedPositions();
-
-                                        for (int i : intList) {
-                                            participantsArrayList.get(i).price += bill.total / intList.size();
-                                            Log.e("Price", participantsArrayList.get(i).price + "");
-                                        }
-
-                                        dialog.dismiss();
-                                    }
-                                }
-                            })
-                            .positiveText("Add")
-                            .autoDismiss(false)
-                            .show();
-
-                    CompoundButtonGroup compoundButtonGroup = materialDialog.getCustomView().findViewById(R.id.cmpbtngrp);
-
-                    compoundButtonGroup.setEntries(stringsList);
-                    compoundButtonGroup.reDraw();
-                }
-                else
-                    Toast.makeText(context, "You need to add some participants first", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        addContributionsButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setStringList();
-
-                if(stringsList.size() != 0) {
-                    MaterialDialog materialDialog = new MaterialDialog.Builder(context)
-                            .title("Add a Bill")
-                            .customView(R.layout.custom_contribution_view, true)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(MaterialDialog dialog, DialogAction which) {
-                                    Spinner spinner = dialog.getCustomView().findViewById(R.id.contributionSpinner);
-
-                                    Log.e("Name", spinner.getSelectedItem().toString());
-
-                                    for (Participant p : participantsArrayList)
-                                    {
-                                        if (p.name.equals(spinner.getSelectedItem().toString())) {
-                                            p.contrib = Double.parseDouble(((EditText) dialog.getCustomView().findViewById(R.id.edittext_price)).getText().toString());
-                                            contributionsArrayList.add(p);
-                                        }
-                                    }
-
-                                    contributionsAdapter.notifyDataSetChanged();
-
-                                }
-                            })
-                            .positiveText("Add")
-                            .show();
-
-                    Spinner spinner = materialDialog.getCustomView().findViewById(R.id.contributionSpinner);
-                    ArrayAdapter dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, stringsList);
-                    dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    spinner.setAdapter(dataAdapter);
-                }
-                else
-                    Toast.makeText(context, "You need to add some participants first", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        addExtrasButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
+            if (stringsList.size() != 0) {
                 MaterialDialog materialDialog = new MaterialDialog.Builder(context)
-                        .title("Add Extras")
-                        .customView(R.layout.custom_extras_view, true)
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(MaterialDialog dialog, DialogAction which) {
-                                Spinner spinner = dialog.getCustomView().findViewById(R.id.descSpinner);
-                                Extra extra = new Extra();
-                                EditText percentageEditText = dialog.getCustomView().findViewById(R.id.edittext_percentage);
-                                extra.desc = spinner.getSelectedItem().toString();
-                                extra.percentage = Double.parseDouble(percentageEditText.getText().toString());
-                                extrasArrayList.add(extra);
-                                extrasAdapter.notifyDataSetChanged();
-                                extrasNum.setText(String.format("%.1f", (calculateExtras() - 1) * 100) + "%");
+                        .title("Add a Bill")
+                        .customView(R.layout.custom_bill_view, true)
+                        .onPositive((dialog, which) -> {
+
+                            FormEditText descFET, qtyFET, priceFET;
+                            descFET = dialog.getCustomView().findViewById(R.id.edittext_desc);
+                            qtyFET = dialog.getCustomView().findViewById(R.id.edittext_qty);
+                            priceFET = dialog.getCustomView().findViewById(R.id.edittext_price);
+
+                            boolean allValid = true;
+                            FormEditText[] allFields = {descFET, qtyFET, priceFET};
+
+                            for (FormEditText field: allFields) {
+                                allValid = field.testValidity() && allValid;
+                            }
+
+                            if (allValid) {
+                                Bill bill = new Bill();
+                                bill.desc = descFET.getText().toString();
+                                bill.qty = Double.valueOf(qtyFET.getText().toString());
+                                bill.price = Double.valueOf(priceFET.getText().toString());
+                                bill.total = bill.qty * bill.price;
+                                billsArrayList.add(bill);
+                                billsAdapter.notifyDataSetChanged();
+
+                                totalNum.setText("$" + String.format("%.2f", calculateTotal()));
+                                CompoundButtonGroup compoundButtonGroup = dialog.getCustomView().findViewById(R.id.cmpbtngrp);
+                                List<Integer> intList = compoundButtonGroup.getCheckedPositions();
+
+                                for (int i : intList) {
+                                    participantsArrayList.get(i).price += bill.total / intList.size();
+                                    Log.e("Price", participantsArrayList.get(i).price + "");
+                                }
+
+                                dialog.dismiss();
                             }
                         })
                         .positiveText("Add")
+                        .autoDismiss(false)
                         .show();
+
+                CompoundButtonGroup compoundButtonGroup = materialDialog.getCustomView().findViewById(R.id.cmpbtngrp);
+
+                compoundButtonGroup.setEntries(stringsList);
+                compoundButtonGroup.reDraw();
             }
+            else
+                Toast.makeText(context, "You need to add some participants first", Toast.LENGTH_SHORT).show();
+        });
+
+        addContributionsButton.setOnClickListener(v -> {
+            setStringList();
+
+            if(stringsList.size() != 0) {
+                MaterialDialog materialDialog = new MaterialDialog.Builder(context)
+                        .title("Add a Bill")
+                        .customView(R.layout.custom_contribution_view, true)
+                        .onPositive((dialog, which) -> {
+                            FormEditText priceFET = dialog.getCustomView().findViewById(R.id.edittext_price);
+                            Spinner spinner = dialog.getCustomView().findViewById(R.id.contributionSpinner);
+
+                            if (priceFET.testValidity())
+                            {
+                                for (Participant p : participantsArrayList)
+                                {
+                                    if (p.name.equals(spinner.getSelectedItem().toString())) {
+                                        p.contrib = Double.parseDouble(((EditText) dialog.getCustomView().findViewById(R.id.edittext_price)).getText().toString());
+                                        contributionsArrayList.add(p);
+                                    }
+                                }
+
+                                contributionsAdapter.notifyDataSetChanged();
+                                dialog.dismiss();
+                            }
+                        })
+                        .positiveText("Add")
+                        .autoDismiss(false)
+                        .show();
+
+                Spinner spinner = materialDialog.getCustomView().findViewById(R.id.contributionSpinner);
+                ArrayAdapter dataAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, stringsList);
+                dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinner.setAdapter(dataAdapter);
+            }
+            else
+                Toast.makeText(context, "You need to add some participants first", Toast.LENGTH_SHORT).show();
+        });
+
+        addExtrasButton.setOnClickListener(v -> {
+            MaterialDialog materialDialog = new MaterialDialog.Builder(context)
+                    .title("Add Extras")
+                    .customView(R.layout.custom_extras_view, true)
+                    .onPositive((dialog, which) -> {
+                        Spinner spinner = dialog.getCustomView().findViewById(R.id.descSpinner);
+                        FormEditText percentageFET = dialog.getCustomView().findViewById(R.id.edittext_percentage);
+
+                        if (percentageFET.testValidity())
+                        {
+                            Extra extra = new Extra();
+                            extra.desc = spinner.getSelectedItem().toString();
+                            extra.percentage = Double.parseDouble(percentageFET.getText().toString());
+                            extrasArrayList.add(extra);
+                            extrasAdapter.notifyDataSetChanged();
+                            extrasNum.setText(String.format("%.1f", (calculateExtras() - 1) * 100) + "%");
+                            dialog.dismiss();
+                        }
+                    })
+                    .positiveText("Add")
+                    .autoDismiss(false)
+                    .show();
         });
 
         createButton.setOnClickListener(new View.OnClickListener() {

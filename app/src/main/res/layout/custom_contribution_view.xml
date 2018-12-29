@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:whatever="http://schemas.android.com/tools"
     android:backgroundTint="#EEEEEE"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -65,14 +66,24 @@
             app:cardUseCompatPadding="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-            <EditText
+            <!--<EditText
                 android:id="@+id/edittext_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#00000000"
                 android:inputType="numberDecimal"
                 android:padding="8dp"
-                android:singleLine="true" />
+                android:singleLine="true" />-->
+            <com.andreabaccega.widget.FormEditText
+                android:id="@+id/edittext_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#00000000"
+                android:inputType="numberDecimal"
+                android:padding="8dp"
+                android:singleLine="true"
+                whatever:emptyErrorString="This field cannot be left blank"
+                whatever:testType="nocheck" />
         </android.support.v7.widget.CardView>
     </LinearLayout>
 

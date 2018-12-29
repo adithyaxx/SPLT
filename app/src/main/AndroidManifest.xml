@@ -30,4 +30,5 @@
         <activity android:name="pw.adithya.SPLT.activities.SummaryActivity" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
