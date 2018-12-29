@@ -13,3 +13,11 @@
 * Add specific service charge & GST percentages
 * Add contribution amounts per person
 * Calculate specific amounts owed per person
+
+### Upcoming Features
+* Share generated SPLTs with friends with the app
+* Share generated SPLTs as an image
+* Save added SPLTs on the cloud
+
+### Join the Beta Testing
+* [Click Here](https://play.google.com/apps/testing/pw.adithya.SPLT)
